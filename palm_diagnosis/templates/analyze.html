@@ -1,0 +1,69 @@
+{% load static %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>تشخيص صحة النخيل</title>
+    <link rel="stylesheet" href="{% static 'css/analyze.css' %}">
+</head>
+
+<body>
+    <div class="page-bg" style="background-image: url('{% static 'images/background.png' %}');"></div>
+
+    <div class="container">
+        <form id="csrf-token-form" style="display:none;">
+            {% csrf_token %}
+        </form>
+
+        <a href="{% url 'index' %}" class="back-btn">← العودة للرئيسية</a>
+
+        <div class="top-badge">
+            <div class="top-badge-inner">
+                <div class="tb-icon">🌴</div>
+                <div class="tb-text">
+                    <div class="tb-title">تشخيص صحة النخيل</div>
+                    <div class="tb-sub">اكتشف حالة نخيلك بدقة عالية باستخدام تقنيات الذكاء الاصطناعي</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="card method-card">
+            <h2 class="card-title">اختر طريقة التحليل</h2>
+            <p class="card-sub">يمكنك التقاط صورة جديدة أو رفع صورة موجودة للنخلة</p>
+
+            <div class="method-options">
+                <button class="option green" id="cameraBtn" type="button">التقاط صورة</button>
+                <button class="option orange" id="uploadBtn" type="button">رفع صورة</button>
+            </div>
+
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+
+            <div class="hint-box">
+                <div class="hint-head"><span class="hint-i">i</span><span>للحصول على أفضل نتائج:</span></div>
+                <ul class="hint-list">
+                    <li>التقط الصورة في ضوء النهار الطبيعي.</li>
+                    <li>اجعل السعف أو الجذع واضحًا في الصورة.</li>
+                    <li>تجنب الصور الضبابية أو البعيدة جدًا.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- نتيجة التحليل -->
+        <section id="result" class="result-wrap" style="display:none;">
+            <div class="result-grid">
+                <div class="result-left">
+                    <h3 class="res-title">الصورة المرفوعة</h3>
+                    <div class="res-image"><img id="resultImg" alt=""></div>
+                </div>
+                <div id="resultPanel"></div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="{% static 'js/analyze.js' %}"></script>
+</body>
+</html>

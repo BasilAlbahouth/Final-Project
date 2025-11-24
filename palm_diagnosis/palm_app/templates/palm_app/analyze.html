@@ -1,0 +1,140 @@
+{% load static %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>تشخيص صحة النخيل</title>
+    <link rel="stylesheet" href="{% static 'css/analyze.css' %}">
+</head>
+
+<body>
+
+    <div class="page-bg" style="background-image: url('{% static 'images/background.png' %}');"></div>
+
+    <div class="container">
+
+        <!-- CSRF -->
+        <form id="csrf-token-form" style="display:none;">
+            {% csrf_token %}
+        </form>
+
+        <!-- زر الرجوع -->
+        <a href="{% url 'index' %}" class="back-btn">← العودة للرئيسية</a>
+
+        <!-- الشارة العلوية -->
+        <div class="top-badge">
+            <div class="top-badge-inner">
+                <div class="tb-icon">🌴</div>
+                <div class="tb-text">
+                    <div class="tb-title">تشخيص صحة النخيل</div>
+                    <div class="tb-sub">اكتشف حالة نخيلك بدقة عالية باستخدام تقنيات الذكاء الاصطناعي</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- بطاقة اختيار طريقة التحليل -->
+        <section class="card method-card">
+            <h2 class="card-title">اختر طريقة التحليل</h2>
+            <p class="card-sub">يمكنك التقاط صورة جديدة أو رفع صورة من جهازك</p>
+
+            <div class="method-options">
+
+                <!-- كاميرا -->
+                <button class="option green" id="cameraBtn" type="button">
+                    <div class="opt-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28">
+                            <path d="M4 8h3l2-2h6l2 2h3v11H4V8z" fill="none" stroke="currentColor" stroke-width="1.6"
+                                stroke-linejoin="round" />
+                            <circle cx="12" cy="13.5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6" />
+                        </svg>
+                    </div>
+                    <div class="opt-title">التقاط صورة</div>
+                    <div class="opt-sub">باستخدام كاميرا الجهاز</div>
+                </button>
+
+                <!-- رفع صورة -->
+                <button class="option orange" id="uploadBtn" type="button">
+                    <div class="opt-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28">
+                            <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor"
+                                stroke-width="1.6" />
+                            <path d="M8 13l3-3 5 6H6" fill="none" stroke="currentColor" stroke-width="1.6"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="opt-title">رفع صورة</div>
+                    <div class="opt-sub">من ملف موجود</div>
+                </button>
+
+            </div>
+
+            <!-- حقول مخفية -->
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+            <input type="file" id="fileInput" accept="image/*" hidden>
+
+            <!-- إرشادات -->
+            <div class="hint-box">
+                <div class="hint-head">
+                    <span class="hint-i">i</span>
+                    <span>للحصول على أفضل نتائج:</span>
+                </div>
+                <ul class="hint-list">
+                    <li>التقط الصور في ضوء النهار الطبيعي.</li>
+                    <li>اجعل السعف ظاهرًا بشكل واضح.</li>
+                    <li>تجنب الصور الضبابية أو البعيدة جدًا.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- أمثلة على التشخيص -->
+        <section class="card examples-card">
+            <h3 class="card-title">أمثلة على التشخيص</h3>
+            <p class="card-sub">هذه أمثلة للسعف السليم والمصاب</p>
+
+            <div class="examples">
+                <article class="example">
+                    <div class="ex-image">
+                        <img src="{% static 'images/example_leaf_healthy.jpg' %}" alt="سعف سليم">
+                        <span class="ribbon ok">سعف سليم</span>
+                    </div>
+                    <h4 class="ex-title">بصحة ممتازة</h4>
+                    <p class="ex-desc">مظهر أخضر بدون أي علامات مرضية</p>
+                </article>
+
+                <article class="example">
+                    <div class="ex-image">
+                        <img src="{% static 'images/example_leaf_diseased.jpg' %}" alt="سعف مصاب">
+                        <span class="ribbon bad">سعف مصاب</span>
+                    </div>
+                    <h4 class="ex-title bad-txt">بحاجة لعناية</h4>
+                    <p class="ex-desc">وجود بقع أو علامات إصابة واضحة</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- نتيجة التحليل -->
+        <section id="result" class="result-wrap" style="display:none;">
+            <div class="result-grid">
+
+                <!-- صورة المستخدم -->
+                <div class="result-left">
+                    <h3 class="res-title">الصورة المرفوعة</h3>
+                    <div class="res-image">
+                        <img id="resultImg" alt="preview">
+                    </div>
+                </div>
+
+                <!-- نتيجة التحليل -->
+                <div id="resultPanel"></div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <script src="{% static 'js/analyze.js' %}"></script>
+
+</body>
+</html>
