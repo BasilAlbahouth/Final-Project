@@ -126,7 +126,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Palm diagnosis model configuration
-PALM_MODEL_PATH = BASE_DIR / 'date_palm_classifier_final (1).keras'
+PALM_MODEL_URL = "https://github.com/BasilAlbahouth/Final-Project/releases/download/v1/date_palm_classifier_final.1.keras"
 PALM_CLASS_NAMES = [
     'سليم',
     'آفة_أعراض_دوباس',
@@ -142,4 +142,5 @@ PALM_CLASS_NAMES = [
     'مرض_الحروق_السوداء',
 ]
 PALM_TOP_K = 6
+
 

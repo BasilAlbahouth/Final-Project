@@ -1,17 +1,40 @@
-# palm_app/ml.py
-import os
 import numpy as np
 from PIL import Image
 import tensorflow as tf
+import tempfile
+import requests
+from django.conf import settings
 
-# مسار الموديل
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "date_palm_classifier_final (1).keras")
 
-# تحميل الموديل مرة واحدة
-model = tf.keras.models.load_model(MODEL_PATH)
+# ---------------------------
+# تحميل الموديل من GitHub Release
+# ---------------------------
+def download_and_load_model():
+    url = settings.PALM_MODEL_URL
+    print(f"Downloading model from: {url}")
 
-# نفس أسماء الكلاسات اللي تدرب عليها الموديل (بالإنجليزي)
+    # ملف مؤقت لحفظ الموديل
+    tmp = tempfile.NamedTemporaryFile(suffix=".keras", delete=False)
+
+    # تحميل الملف من GitHub
+    response = requests.get(url)
+    tmp.write(response.content)
+    tmp.flush()
+
+    print("Loading TensorFlow model...")
+    model = tf.keras.models.load_model(tmp.name)
+
+    return model
+
+
+# نحمل الموديل مرّة وحده فقط
+model = download_and_load_model()
+
+
+# ---------------------------
+# تعريف الكلاسات
+# ---------------------------
+
 CLASSES_EN = [
     "CLASS_00_Healthy",
     "CLASS_03_Pest_Dubas_Symptom",
@@ -27,7 +50,6 @@ CLASSES_EN = [
     "CLASS_06_Disease_BlackScorch",
 ]
 
-# مقابلها بالعربي
 CLASSES_AR = {
     "CLASS_00_Healthy": "سليمة",
     "CLASS_03_Pest_Dubas_Symptom": "أعراض حشرة الدُبّاس",
@@ -44,28 +66,28 @@ CLASSES_AR = {
 }
 
 
+# ---------------------------
+# دالة التصنيف
+# ---------------------------
 def classify_image(django_file):
     """
     يستقبل ملف الصورة من Django، ويرجع:
     {
         "predicted_class": "نقص المنغنيز",
         "confidence": 0.13,
-        "classes": [
-            {"name": "نقص المنغنيز", "confidence": 0.13},
-            {"name": "لفحة العرجون", "confidence": 0.10},
-            ...
-        ]
+        "classes": [ ... ]
     }
     """
-    # قراءة الصورة
+
+    # تجهيز الصورة
     img = Image.open(django_file).convert("RGB").resize((224, 224))
     arr = np.array(img, dtype=np.float32) / 255.0
     arr = np.expand_dims(arr, axis=0)
 
     # تنبؤ الموديل
-    preds = model.predict(arr)[0]  # شكلها (عدد_الكلاسات,)
+    preds = model.predict(arr)[0]
 
-    # ترتيب من الأعلى إلى الأقل
+    # أعلى نتيجة
     sorted_idx = np.argsort(preds)[::-1]
     top_idx = int(sorted_idx[0])
 
@@ -73,6 +95,7 @@ def classify_image(django_file):
     top_class_ar = CLASSES_AR[top_class_en]
     top_confidence = float(preds[top_idx])
 
+    # باقي النتائج
     classes_list = []
     for idx in sorted_idx:
         class_en = CLASSES_EN[int(idx)]
