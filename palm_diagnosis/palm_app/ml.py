@@ -13,10 +13,8 @@ def download_and_load_model():
     url = settings.PALM_MODEL_URL
     print(f"Downloading model from: {url}")
 
-    # ملف مؤقت لحفظ الموديل
     tmp = tempfile.NamedTemporaryFile(suffix=".keras", delete=False)
 
-    # تحميل الملف من GitHub
     response = requests.get(url)
     tmp.write(response.content)
     tmp.flush()
@@ -25,6 +23,7 @@ def download_and_load_model():
     model = tf.keras.models.load_model(tmp.name)
 
     return model
+
 
 
 # نحمل الموديل مرّة وحده فقط
