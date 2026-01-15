@@ -1,0 +1,204 @@
+{% extends "palm_app/base.html" %}
+{% load static %}
+{% block title %}منصة تشخيص النخيل{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+
+    <div class="page-bg" style="background-image: url('{% static 'images/background.png' %}');"></div>
+
+    <div class="container">
+
+        <!-- الشارة العلوية -->
+        <div class="top-badge">
+            <div class="top-badge-inner">
+                <div class="tb-icon">🌴</div>
+                <div class="tb-text">
+                    <div class="tb-title">منصة تشخيص النخيل بالذكاء الاصطناعي</div>
+                    <div class="tb-sub">اكتشف صحة نخيلك بدقة عالية باستخدام تقنيات الذكاء الاصطناعي المتقدمة</div>
+                    <div class="tb-sub">تشخيص فوري للأمراض والآفات مع توصيات علاجية</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- البطاقة الرئيسية -->
+        <section class="main-card">
+            <div class="info-inner">
+                <div class="logo-square">
+                    <div class="tb-icon">🌴</div>
+                </div>
+
+                <h1 class="main-title">تشخيص شامل للنخيل</h1>
+
+                <p class="main-desc">
+                    قم برفع صورة للنخلة أو السعف للحصول على تشخيص دقيق وفوري لحالة النخلة،
+                    مع توصيات علاجية متخصصة.
+                </p>
+
+                <div class="features">
+                    <div class="feature">
+                        <img src="{% static 'images/diagnostics_icon.png' %}" class="feat-icon">
+                        <div class="feat-text">
+                            <div class="feat-title">كشف دقيق</div>
+                            <div class="feat-sub">للأمراض والآفات</div>
+                        </div>
+                        <span class="feat-badge green"><span class="dot"></span> 95% دقة</span>
+                    </div>
+
+                    <div class="feature">
+                        <img src="{% static 'images/lightning.png' %}" class="feat-icon">
+                        <div class="feat-text">
+                            <div class="feat-title">تحليل فوري</div>
+                            <div class="feat-sub">خلال 3 ثوانٍ</div>
+                        </div>
+                        <span class="feat-badge orange"><span class="dot"></span> 11 مرض</span>
+                    </div>
+
+                    <div class="feature">
+                        <img src="{% static 'images/pill.png' %}" class="feat-icon">
+                        <div class="feat-text">
+                            <div class="feat-title">توصيات عملية</div>
+                            <div class="feat-sub">حلول فعّالة</div>
+                        </div>
+                        <span class="feat-badge green"><span class="dot"></span> 12k+ عيّنة</span>
+                    </div>
+                </div>
+
+                <a class="cta-btn" href="{% url 'analyze' %}">ابدأ التشخيص الآن</a>
+            </div>
+        </section>
+
+        <!-- أمثلة -->
+        <section class="main-card center-card">
+            <div class="info-inner">
+                <h2 class="main-title">أمثلة على حالات النخيل</h2>
+                <p class="main-desc">اضغط لعرض صور توضيحية لكل الأمراض</p>
+
+                <button id="openExamples" class="cta-btn">شاهد الأمثلة</button>
+            </div>
+        </section>
+
+        <!-- مودال الأمثلة -->
+        <div id="examplesModal" class="examples-modal">
+            <div class="examples-content">
+                <span class="close-examples">&times;</span>
+
+                <h2 class="modal-title">أمثلة حالات النخيل</h2>
+
+                <div class="examples-grid">
+                    {% for item in examples %}
+                    <div class="ex-item">
+                        <div class="ex-img-box">
+                            <img src="{% static item.img %}" alt="{{ item.title }}">
+                            <div class="ex-label">{{ item.title }}</div>
+                        </div>
+                        <div class="ex-desc">{{ item.desc }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- بطاقة المعلومات -->
+        <section class="main-card">
+            <div class="info-inner">
+                <div class="logo-square small">🌴</div>
+
+                <h3>معلومات عن التطبيق</h3>
+                <p>
+                    يستخدم هذا التطبيق تقنيات الذكاء الاصطناعي لتحليل صور النخيل وتشخيص حالتها بدقة،
+                    مع اقتراح خطوات علاجية أو توصية بزيارة مختص.
+                </p>
+
+                <button class="cta-btn" id="showMoreBtn">المزيد من المعلومات</button>
+            </div>
+        </section>
+
+        <!-- القسم الإضافي المخفي -->
+        <section id="moreInfoSection" class="main-card" style="display:none;">
+        <div class="info-inner">
+            
+            <div class="logo-square small">🌴</div>
+
+            <h2 class="info-title">عن تطبيق تشخيص النخيل</h2>
+
+            <p class="info-text">
+                هذا التطبيق متخصص في تشخيص صحة أشجار النخيل باستخدام تقنيات الذكاء الاصطناعي المتطورة.
+                يمكنه التعرف على العديد من الأمراض والآفات مثل سوسة النخيل الحمراء،
+                تعفن القمة، الحشرات القشرية وغيرها من المشاكل الصحية الشائعة.
+            </p>
+
+            <div class="stats-grid">
+                
+                <div class="stat-card green">
+                    <h3>95%</h3>
+                    <p>دقة التشخيص</p>
+                </div>
+
+                <div class="stat-card blue">
+                    <h3>12K+</h3>
+                    <p>عينة تدريب</p>
+                </div>
+
+                <div class="stat-card yellow">
+                    <h3>11 مرض</h3>
+                    <p>نوع مرض</p>
+                </div>
+
+                <div class="stat-card purple">
+                    <h3>3 ثوان</h3>
+                    <p>وقت التحليل</p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- زر إظهار القسم + Scroll -->
+    <script>
+        document.getElementById("showMoreBtn").addEventListener("click", () => {
+            const section = document.getElementById("moreInfoSection");
+
+            // إظهار القسم إذا كان مخفي
+            section.style.display = "block";
+
+            // سكرول سلس للقسم
+            section.scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+        });
+    </script>
+
+<script>
+    const modal = document.getElementById("examplesModal");
+    const openBtn = document.getElementById("openExamples");
+    const closeBtn = document.querySelector(".close-examples");
+
+    // فتح المودال
+    if (openBtn) {
+        openBtn.addEventListener("click", () => {
+            modal.style.display = "block";
+        });
+    }
+
+    // إغلاق المودال
+    if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+            modal.style.display = "none";
+        });
+    }
+
+    // إغلاق عند الضغط خارج المودال
+    window.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.style.display = "none";
+        }
+    });
+</script>
+    </div>
+{% endblock %}

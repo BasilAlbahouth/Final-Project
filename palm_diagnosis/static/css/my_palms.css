@@ -1,0 +1,90 @@
+.palm-management-page {
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    padding: 80px 20px 40px 20px; /* زيادة البادينج العلوي واليمين لتجنب الهاندل */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* كرت الجدول الشفاف والمودرن */
+.table-container-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 30px;
+    width: 100%;
+    max-width: 1100px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    margin-right: 40px; /* إزاحة إضافية لتجنب تداخل المقبض الأخضر */
+}
+
+.custom-table {
+    width: 100%;
+    color: white;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.custom-table thead th {
+    background: rgba(31, 170, 89, 0.8);
+    color: white;
+    padding: 15px;
+    border: none;
+    text-align: center;
+}
+
+.custom-table thead th:first-child { border-radius: 0 12px 12px 0; }
+.custom-table thead th:last-child { border-radius: 12px 0 0 12px; }
+
+.custom-table tbody tr {
+    background: rgba(255, 255, 255, 0.03);
+    transition: 0.3s;
+}
+
+.custom-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.01);
+}
+
+.custom-table td {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.btn-view-history {
+    background: #1faa59;
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-view-history:hover {
+    background: #158a47;
+    color: white;
+}
+
+.page-bg {
+    position: fixed;
+    inset: 0;
+    background-image: url('background.png');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.55);
+    z-index: -3;
+}
+
+.page-title {
+    color: rgb(12, 71, 78);
+    font-weight: bold;
+    margin-bottom: 10px;
+}  

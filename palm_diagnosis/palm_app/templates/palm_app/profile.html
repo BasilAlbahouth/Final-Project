@@ -1,0 +1,186 @@
+{% extends "palm_app/base.html" %}
+{% load static %}
+
+{% block title %}الملف الشخصي{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<div class="page-bg"></div>
+
+<div class="profile-page">
+
+    <!-- ================= PROFILE HEADER ================= -->
+    <input type="checkbox" id="editProfileToggle" hidden>
+    <div class="glass-card profile-header">
+
+        <!-- ===== Avatar Column ===== -->
+        <div class="profile-avatar">
+
+            {% if request.user.profile.avatar %}
+                <img src="{{ request.user.profile.avatar.url }}" class="avatar-img">
+            {% else %}
+                <div class="avatar-placeholder">
+                    <span class="avatar-icon">👤</span>
+                </div>
+            {% endif %}
+
+            <!-- Upload Avatar -->
+            <form
+                action="{% url 'upload_avatar' %}"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+                {% csrf_token %}
+                <input
+                    type="file"
+                    id="avatarInput"
+                    name="avatar"
+                    accept="image/*"
+                    hidden
+                    onchange="this.form.submit()"
+                >
+                <label for="avatarInput" class="btn-primary avatar-upload-btn">
+                    تغيير الصورة✏️
+                </label>
+            </form>
+
+        </div>
+
+        <!-- ===== Info Columns ===== -->
+        <div class="profile-info-grid">
+
+            <!-- Column 1 -->
+            <div class="profile-column">
+                <div class="info-box">
+                    <label>الاسم الأول</label>
+                    <span>{{ request.user.first_name }}</span>
+                </div>
+
+                <div class="info-box">
+                    <label>اسم العائلة</label>
+                    <span>{{ request.user.last_name }}</span>
+                </div>
+
+                <div class="info-box">
+                    <label>كلمة المرور</label>
+                    <span>********</span>
+                </div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="profile-column">
+                <div class="info-box">
+                    <label>البريد الإلكتروني</label>
+                    <span>{{ request.user.email }}</span>
+                </div>
+
+                <div class="info-box">
+                    <label>رقم الجوال</label>
+                    <span>{{ request.user.profile.phone|default:"—" }}</span>
+                </div>
+
+                <div class="info-box">
+                    <label>الموقع</label>
+                    <span>{{ request.user.profile.location|default:"—" }}</span>
+                </div>
+
+                <!-- Toggle Modal -->
+                <label for="editProfileToggle" class="edit-icon-btn btn-secondary edit-profile-btn">
+                    تعديل البيانات✏️
+                </label>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ===== MODAL (لازم يكون أخ للـ checkbox) ===== -->
+    <div class="modal-overlay edit-modal">
+        <div class="modal-card glass-card">
+            <h3 class="modal-title">تعديل البيانات الشخصية</h3>
+
+            <form method="POST" action="{% url 'edit_profile' %}">
+                {% csrf_token %}
+
+                <div class="modal-grid">
+                    <div>
+                        <label>الاسم الأول</label>
+                        <input type="text" name="first_name" value="{{ request.user.first_name }}">
+                    </div>
+                    <div>
+                        <label>اسم العائلة</label>
+                        <input type="text" name="last_name" value="{{ request.user.last_name }}">
+                    </div>
+                    <div>
+                        <label>رقم الجوال</label>
+                        <input type="text" name="phone" value="{{ request.user.profile.phone }}">
+                    </div>
+                    <div>
+                        <label>الموقع</label>
+                        <input type="text" name="location" value="{{ request.user.profile.location }}">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-green modal-close">حفظ</button>
+                    <label for="editProfileToggle" class="btn-green modal-close">
+                        إلغاء
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= STATS ================= -->
+    <div class="stats-grid">
+
+        <div class="glass-card stat-card">
+            <div class="stat-badge">
+                <span class="stat-icon">🔍</span>
+                <div class="stat-text">
+                    <span class="stat-number">{{ total_diagnoses }}</span>
+                    <span class="stat-label">عدد التشخيصات</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card stat-card">
+            <div class="stat-badge">
+                <span class="stat-icon">📸</span>
+                <div class="stat-text">
+                    <span class="stat-number">{{ total_images }}</span>
+                    <span class="stat-label">صور مرفوعة</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card stat-card">
+            <div class="stat-badge">
+                <span class="stat-icon">🌴</span>
+                <div class="stat-text">
+                    <span class="stat-number">{{ healthy_percentage }}%</span>
+                    <span class="stat-label">نسبة السليمة</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card stat-card">
+            <div class="stat-badge">
+                <span class="stat-icon">⏱</span>
+                <div class="stat-text">
+                    <span class="stat-number">
+                        {% if days_since_last != None %}
+                            {{ days_since_last }} يوم
+                        {% else %}
+                            —
+                        {% endif %}
+                    </span>
+                    <span class="stat-label">آخر تشخيص</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

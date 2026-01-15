@@ -1,0 +1,54 @@
+{% extends "palm_app/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/my_palms.css' %}">
+
+<div class="page-bg" style="background-image: url('{% static 'images/background.png' %}');"></div>
+
+<div class="palm-management-page">
+    <div class="container text-center mb-4">
+        <h1 class="page-title">🌴إدارة نخيلاتي</h1>
+        <p style="color: #1faa59; font-size: 1.1rem;">تتبع الحالة الصحية لجميع أشجار النخيل الخاصة بك</p>
+    </div>
+
+    <div class="table-container-card">
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>اسم النخلة</th>
+                        <th>عدد الصور</th>
+                        <th>تاريخ الإضافة</th>
+                        <th>الموقع</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for palm in palms %}
+                    <tr>
+                        <td style="font-weight: bold; color: #1faa59;">🌴 {{ palm.name }}</td>
+                        <td>{{ palm.diagnoses.count }} صور</td>
+                        <td>{{ palm.created_at|date:"Y-m-d" }}</td>
+                        <td>
+                            {% if palm.latitude %}
+                                <span style="color: #3498db;">📍 الرياض</span>
+                            {% else %}
+                                <span style="color: #7f8c8d;">غير محدد</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'history' %}?palm_id={{ palm.id }}" class="btn-view-history">عرض السجل 🔍</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" style="padding: 50px; color: #7f8c8d;">لا يوجد نخيل مسجل حالياً.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

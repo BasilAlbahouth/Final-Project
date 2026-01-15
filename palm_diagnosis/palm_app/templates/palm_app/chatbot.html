@@ -1,0 +1,37 @@
+{% extends "palm_app/base.html" %}
+{% load static %}
+{% block title %}المساعد الذكي{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
+
+<div class="chat-page">
+  <div class="chat-container">
+
+    <div class="chat-header">
+      <span class="chat-avatar">🌴</span>
+      <div>
+        <h2>مساعد النخيل الذكي</h2>
+        <p>اسأل عن الأمراض، الأعراض وطرق العناية</p>
+      </div>
+    </div>
+
+    <div class="chat-body" id="chatbotMessages">
+      <div class="chat-msg bot">
+        <div class="msg-bubble">
+          أهلاً بك 👋  
+          كيف أستطيع مساعدتك اليوم؟
+        </div>
+      </div>
+    </div>
+
+    <form class="chat-input" id="chatbotForm">
+      <input id="chatbotText" type="text" placeholder="اكتب سؤالك هنا..." autocomplete="off"/>
+      <button type="submit">إرسال</button>
+    </form>
+
+  </div>
+</div>
+
+<script src="{% static 'js/chatbot.js' %}"></script>
+{% endblock %}

@@ -5,6 +5,10 @@ Django settings for palm_diagnosis project.
 from pathlib import Path
 import os
 
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,6 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'palm_app',
+    'palm_app.registration',
+
 ]
 
 MIDDLEWARE = [
@@ -118,7 +124,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files (user uploads)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -143,4 +149,23 @@ PALM_CLASS_NAMES = [
 ]
 PALM_TOP_K = 6
 
+GEMINI_API_KEY = "AIzaSyBYlR8UIjLIaJnRjPlyfjkrb-0I9F2rXq0"
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
+# Email configuration for password reset
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_USE_TLS = False  # مهم جدًا
+
+EMAIL_HOST_USER = "basilalbahoth@gmail.com"
+EMAIL_HOST_PASSWORD = "jrdjyukvwtjookon"
+
+DEFAULT_FROM_EMAIL = 'Palm Diagnosis <noreply@palmdiagnosis.com>'
+
+EMAIL_SUBJECT_PREFIX = '[Palm Diagnosis] '
 

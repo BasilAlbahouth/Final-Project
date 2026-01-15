@@ -1,0 +1,99 @@
+{% load static %}
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Palm Diagnosis{% endblock %}</title>
+
+  <!-- Sidebar CSS -->
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+</head>
+
+<body>
+
+<!-- زر فتح السايد بار -->
+<button id="sidebarHandle" class="sidebar-handle">☰</button>
+
+<!-- السايد بار -->
+<aside class="sidebar" id="sidebar">
+
+  <div class="sidebar-title">
+    🌴 Palm Diagnosis
+  </div>
+
+  <ul class="sidebar-menu">
+
+    <li>
+      <a href="{% url 'home' %}">
+        🏠 الصفحة الرئيسية
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'analyze' %}">
+        🌴 تشخيص النخيل
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'assistant' %}">
+        🤖 المساعدة الذكية
+      </a>
+    </li>
+
+    <hr>
+
+    {% if user.is_authenticated %}
+      <li>
+        <a href="{% url 'profile' %}">
+          👤 ملفي الشخصي
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'history' %}">
+          📜 سجل التشخيصات
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'my_palms' %}">
+          🌴 نخلي
+        </a>
+      </li>
+
+      <hr>
+
+      <li>
+        <a class="danger" href="{% url 'logout' %}">
+          🚪 تسجيل الخروج
+        </a>
+      </li>
+    {% else %}
+      <li>
+        <a href="{% url 'login' %}">
+          🔐 تسجيل الدخول
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'register' %}">
+          📝 إنشاء حساب
+        </a>
+      </li>
+    {% endif %}
+
+  </ul>
+</aside>
+
+<!-- محتوى الصفحة -->
+<main class="page-content">
+  {% block content %}{% endblock %}
+</main>
+
+<!-- Sidebar JS -->
+<script src="{% static 'js/sidebar.js' %}"></script>
+
+</body>
+</html>

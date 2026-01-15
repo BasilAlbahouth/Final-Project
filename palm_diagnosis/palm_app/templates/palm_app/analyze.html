@@ -1,16 +1,11 @@
+{% extends "palm_app/base.html" %}
 {% load static %}
-<!doctype html>
-<html lang="ar" dir="rtl">
+{% block title %}تشخيص صحة النخيل{% endblock %}
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>تشخيص صحة النخيل</title>
-    <link rel="stylesheet" href="{% static 'css/analyze.css' %}">
-</head>
+{% block content %}
 
-<body>
-
+    <link rel="stylesheet" href="{% static 'css/analyse.css' %}">
+    
     <div class="page-bg" style="background-image: url('{% static 'images/background.png' %}');"></div>
 
     <div class="container">
@@ -21,7 +16,7 @@
         </form>
 
         <!-- زر الرجوع -->
-        <a href="{% url 'index' %}" class="back-btn">← العودة للرئيسية</a>
+        <a href="{% url 'home' %}" class="back-btn">← العودة للرئيسية</a>
 
         <!-- الشارة العلوية -->
         <div class="top-badge">
@@ -88,32 +83,6 @@
             </div>
         </section>
 
-        <!-- أمثلة على التشخيص -->
-        <section class="card examples-card">
-            <h3 class="card-title">أمثلة على التشخيص</h3>
-            <p class="card-sub">هذه أمثلة للسعف السليم والمصاب</p>
-
-            <div class="examples">
-                <article class="example">
-                    <div class="ex-image">
-                        <img src="{% static 'images/example_leaf_healthy.jpg' %}" alt="سعف سليم">
-                        <span class="ribbon ok">سعف سليم</span>
-                    </div>
-                    <h4 class="ex-title">بصحة ممتازة</h4>
-                    <p class="ex-desc">مظهر أخضر بدون أي علامات مرضية</p>
-                </article>
-
-                <article class="example">
-                    <div class="ex-image">
-                        <img src="{% static 'images/example_leaf_diseased.jpg' %}" alt="سعف مصاب">
-                        <span class="ribbon bad">سعف مصاب</span>
-                    </div>
-                    <h4 class="ex-title bad-txt">بحاجة لعناية</h4>
-                    <p class="ex-desc">وجود بقع أو علامات إصابة واضحة</p>
-                </article>
-            </div>
-        </section>
-
         <!-- نتيجة التحليل -->
         <section id="result" class="result-wrap" style="display:none;">
             <div class="result-grid">
@@ -125,16 +94,16 @@
                         <img id="resultImg" alt="preview">
                     </div>
                 </div>
+                
 
                 <!-- نتيجة التحليل -->
                 <div id="resultPanel"></div>
 
             </div>
         </section>
-
     </div>
-
-    <script src="{% static 'js/analyze.js' %}"></script>
-
-</body>
-</html>
+    <script>
+    window.isUserAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+    </script>
+    <script src="{% static 'js/analyse.js' %}"></script>
+{% endblock %}

@@ -1,52 +1,62 @@
-import numpy as np
-from PIL import Image
 from django.http import JsonResponse
-import tensorflow as tf
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.views.decorators.http import require_POST
+from .ml import classify_image
+from palm_app.chatbot.chatbot_engine import answer_question
+from palm_app.rag_db.rag_engine import search_similar_chunks
 import os
 
-# تحميل الموديل عند أول تشغيل (مرة واحدة)
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "date_palm_classifier_final (1).keras")
-model = tf.keras.models.load_model(MODEL_PATH)
+from google.genai import Client
+from django.conf import settings
+client = Client(api_key=settings.GEMINI_API_KEY)
 
-# الأصناف بالعربي
-CLASSES_AR = {
-    "CLASS_00_Healthy": "سليمة",
-    "CLASS_03_Pest_Dubas_Symptom": "أعراض حشرة الدُبّاس",
-    "CLASS_05_Disease_LeafSpot_Generic": "تبقّع الأوراق (عام)",
-    "CLASS_01_Pest_WhiteScale": "الحشرة القشرية البيضاء",
-    "CLASS_09_Deficiency_K": "نقص البوتاسيوم (K)",
-    "CLASS_02_Pest_Dubas_Bug": "حشرة الدُبّاس",
-    "CLASS_11_Deficiency_Mg": "نقص المغنيسيوم (Mg)",
-    "CLASS_04_Disease_BrownSpot_Graphiola": "تبقّع بني (جرافيولا)",
-    "CLASS_10_Deficiency_Mn": "نقص المنغنيز (Mn)",
-    "CLASS_08_Disease_RachisBlight": "لفحة العرجون",
-    "CLASS_07_Disease_FusariumWilt": "ذبول الفيوزاريوم",
-    "CLASS_06_Disease_BlackScorch": "اللفحة السوداء"
-}
+@csrf_exempt
+def analyze_image(request):
+    if request.method != "POST":
+        return JsonResponse({"error": "POST only"}, status=405)
 
-CLASSES = list(CLASSES_AR.keys())
+    image = request.FILES.get("image")
+    if not image:
+        return JsonResponse({"error": "يرجى رفع صورة"}, status=400)
 
-# def analyze_api(request):
-#     if request.method != "POST":
-#         return JsonResponse({"error": "POST only"}, status=400)
+    try:
+        result = classify_image(image)
 
-#     file = request.FILES.get("file")
-#     if not file:
-#         return JsonResponse({"error": "No file uploaded"}, status=400)
+        if result.get("not_palm"):
+            return JsonResponse({"not_palm": True})
 
-#     img = Image.open(file).resize((224, 224))
-#     arr = np.array(img) / 255.0
-#     arr = np.expand_dims(arr, axis=0)
+        return JsonResponse(result)
 
-#     preds = model.predict(arr)[0]
-#     idx = int(np.argmax(preds))
+    except Exception:
+        return JsonResponse({"error": "حدث خطأ أثناء التحليل"}, status=500)
 
-#     class_en = CLASSES[idx]
-#     class_ar = CLASSES_AR[class_en]
-#     accuracy = float(preds[idx] * 100)
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+KNOWLEDGE_FILE = os.path.join(BASE_PATH, "rag_db", "palm_knowledge_ar.txt")
 
-#     return JsonResponse({
-#         "class_en": class_en,
-#         "class_ar": class_ar,
-#         "accuracy": accuracy
-#     })
+with open(KNOWLEDGE_FILE, "r", encoding="utf-8") as f:
+    KNOWLEDGE_TEXT = f.read()
+
+@csrf_exempt
+@require_POST
+def chatbot_api(request):
+    """
+    Endpoint للـ Chatbot:
+    - يستقبل message
+    - يستدعي answer_question من محرك الـ Chatbot
+    - يرجع JSON فيه answer
+    """
+    try:
+        body = json.loads(request.body.decode("utf-8"))
+        question = (body.get("message") or "").strip()
+
+        if not question:
+            return JsonResponse({"error": "Empty message"}, status=400)
+
+        # هنا كل الشغل الذكي صار داخل answer_question
+        answer = answer_question(question)
+
+        return JsonResponse({"answer": answer})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

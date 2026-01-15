@@ -1,0 +1,84 @@
+{% extends "palm_app/base.html" %}
+{% load static %}
+
+{% block title %}سجل التشخيصات{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/history.css' %}">
+
+<div class="page-bg"></div>
+
+<div class="history-page">
+
+    <!-- ===== Header ===== -->
+    <div class="glass-card history-header">
+        <div class="header-text">
+            <h2>📜 سجل التشخيصات</h2>
+            <p>جميع التشخيصات التي قمت بها مرتبة من الأحدث إلى الأقدم</p>
+        </div>
+
+        <!-- Search (تحضيري) -->
+        <div class="history-search">
+            <input type="text" placeholder="ابحث باسم النخلة أو النتيجة...">
+            <span class="search-icon">🔍</span>
+        </div>
+    </div>
+
+    <!-- ===== History List ===== -->
+    <div class="history-list">
+
+        {% if diagnoses %}
+            {% for d in diagnoses %}
+            <div class="glass-card history-card">
+
+                <!-- Image -->
+                <div class="history-image">
+                    {% if d.image %}
+                        <img src="{{ d.image.url }}" alt="صورة التشخيص">
+                    {% else %}
+                        <div class="image-placeholder">📷</div>
+                    {% endif %}
+                </div>
+
+                <!-- Info -->
+                <div class="history-info">
+
+                    <div class="history-top">
+                        <h3>{{ d.result_label }}</h3>
+                        <span class="history-date">
+                            {{ d.created_at|date:"Y-m-d H:i" }}
+                        </span>
+                    </div>
+
+                    <p class="history-palm">
+                        🌴 {{ d.palm.name }}
+                    </p>
+
+                    <!-- Confidence -->
+                    <div class="confidence-box">
+                        <span>درجة الثقة</span>
+                        <div class="confidence-bar">
+                            <div style="width: {{ d.confidence_score|floatformat:0 }}%"></div>
+                        </div>
+                        <strong>{{ d.confidence_score|floatformat:0 }}%</strong>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="history-actions">
+                        <button class="btn-view">عرض التفاصيل</button>
+                        <button class="btn-delete">حذف</button>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="glass-card empty-history">
+                <p>لا يوجد تشخيصات محفوظة حتى الآن 🌱</p>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
